@@ -40,7 +40,7 @@ func (m *TokenMaker) Validate(tokenString string) (*Claims, error) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("неверный метод подписиЖ %v", t.Header["alg"])
+			return nil, fmt.Errorf("Invalid signature method %v", t.Header["alg"])
 		}
 		return m.secret, nil
 	})
