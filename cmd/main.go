@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gopinniped/gotion/internal/app"
-	"github.com/gopinniped/gotion/internal/config"
+	"github.com/gopinniped/gotion/internal/infrastructure/config"
 )
 
 func main() {

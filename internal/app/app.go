@@ -7,12 +7,15 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gopinniped/gotion/internal/config"
-	"github.com/gopinniped/gotion/internal/domain/usecase"
-	"github.com/gopinniped/gotion/internal/infra/postgres"
-	"github.com/gopinniped/gotion/internal/infra/postgres/storage"
-	"github.com/gopinniped/gotion/internal/transport/http/handler"
-	"github.com/gopinniped/gotion/internal/transport/http/middleware"
+	"github.com/gopinniped/gotion/internal/infrastructure/config"
+	"github.com/gopinniped/gotion/internal/infrastructure/postgres"
+	taskhandler "github.com/gopinniped/gotion/internal/modules/tasks/handler"
+	taskstorage "github.com/gopinniped/gotion/internal/modules/tasks/storage"
+	taskusecase "github.com/gopinniped/gotion/internal/modules/tasks/usecase"
+	userhandler "github.com/gopinniped/gotion/internal/modules/users/handler"
+	userstorage "github.com/gopinniped/gotion/internal/modules/users/storage"
+	userusecase "github.com/gopinniped/gotion/internal/modules/users/usecase"
+	"github.com/gopinniped/gotion/internal/shared/middleware"
 	"github.com/gopinniped/gotion/pkg/token"
 )
 
@@ -29,13 +32,13 @@ func New(cfg *config.Config) (*App, error) {
 
 	tokenMaker := token.NewMaker(cfg.JWTSecret)
 
-	userStorage := storage.NewUserStorage(db.DB)
-	userUseCase := usecase.NewUserUseCase(userStorage, tokenMaker)
-	userHandler := handler.NewUserHandler(userUseCase)
+	userStorage := userstorage.NewUserStorage(db.DB)
+	userUseCase := userusecase.NewUserUseCase(userStorage, tokenMaker)
+	userHandler := userhandler.NewUserHandler(userUseCase)
 
-	taskStorage := storage.NewTaskStorage(db.DB)
-	taskUseCase := usecase.NewTaskUseCase(taskStorage)
-	taskHandler := handler.NewTaskHandler(taskUseCase)
+	taskStorage := taskstorage.NewTaskStorage(db.DB)
+	taskUseCase := taskusecase.NewTaskUseCase(taskStorage)
+	taskHandler := taskhandler.NewTaskHandler(taskUseCase)
 
 	router := NewRouter(userHandler, taskHandler, middleware.Auth(tokenMaker))
 

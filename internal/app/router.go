@@ -5,10 +5,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
-	"github.com/gopinniped/gotion/internal/transport/http/handler"
+	taskhandler "github.com/gopinniped/gotion/internal/modules/tasks/handler"
+	userhandler "github.com/gopinniped/gotion/internal/modules/users/handler"
 )
 
-func NewRouter(userHandler *handler.UserHandler, taskHandler *handler.TaskHandler, authMW func(http.Handler) http.Handler) *chi.Mux {
+func NewRouter(userHandler *userhandler.UserHandler, taskHandler *taskhandler.TaskHandler, authMW func(http.Handler) http.Handler) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(chimw.Logger)
